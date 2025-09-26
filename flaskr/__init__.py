@@ -1,6 +1,5 @@
 import os
-
-from flask import Flask
+from flask import Flask, render_template
 
 def create_app(test_config=None):
     # create and configure app
@@ -22,11 +21,11 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
+
     # generate a simple page with flask
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
+    @app.route('/')
+    def index():
+        return render_template('index.html')
     
     # Authentication of the database 'init-db'
     from . import db

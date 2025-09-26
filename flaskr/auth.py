@@ -25,8 +25,12 @@ def register():
 
         if error is None:
             try:
-                db.execute("INSERT INTO user (username, password) VALUES (?, ?)",
-                           username, generate_password_hash(password)),
+                db.execute(
+                    "INSERT INTO user (username, password) VALUES (?, ?)",
+                    (username, generate_password_hash(password)),
+                )
+                db.commit()
+
     
             except db.IntegrityError:
                  error = f"User {username} is already registered."
@@ -45,7 +49,7 @@ def login():
         db = get_db()
         error = None
         # get value of password from database
-        user.db.execute('SELECT * FROM user WHERE username = ?', (username,)).fetchone()
+        user = db.execute('SELECT * FROM user WHERE username = ?', (username,)).fetchone()
 
         if user is None:
             error = "Incorrect Username. "
@@ -75,15 +79,15 @@ def load_logged_in_user():
 @bp.route('/logout', methods = ['GET'])
 def logout():
     session.clear()
-    return render_template(url_for('index'))
+    return redirect(url_for('index'))
 
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
-
-        return view(**kwargs)
+        else:
+            return view(**kwargs)
 
     return wrapped_view
 

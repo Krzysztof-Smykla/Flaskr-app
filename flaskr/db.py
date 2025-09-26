@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import datetime
-
 import click
 from flask import current_app, g
 
@@ -21,7 +20,7 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
-# Adding python functions that run SQL commands.
+# Adding python functions that run SQL commands in the sql schema.
 
 def init_db():
     db = get_db()
